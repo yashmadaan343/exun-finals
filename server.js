@@ -14,6 +14,7 @@ const passportInit = require('./middleware/passport.js')
 const landing = require('./routes/landing')
 const auth = require('./routes/auth')
 const admin = require('./routes/admin')
+const song = require('./routes/song')
 
 if (process.env.NODE_ENV === 'production') {
     app.enable('trust proxy');
@@ -70,6 +71,7 @@ mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true }).the
 app.use('/', landing)
 app.use('/auth', auth)
 app.use('/admin', admin)
+app.use('/song', song)
 
 
 //listen
