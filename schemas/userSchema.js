@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
         default: dateStringWithTime
     },
     userId: reqString,
+    admin: reqBoolean,
     pfp: {type:String, default:"https://www.nicepng.com/png/detail/933-9332131_profile-picture-default-png.png"}
 })
 
