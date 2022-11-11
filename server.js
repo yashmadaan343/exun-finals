@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const cookieParser = require("cookie-parser");
 const bodyparser = require('body-parser');
 const ejs  = require('ejs');
+const ejsLayouts = require('express-ejs-layouts');
 const cors = require('cors');
 const passportInit = require('./middleware/passport.js')
 
@@ -35,6 +36,7 @@ app.use(cors(corsOptions))
 //middlewares
 app.use(express.json({ limit: '50mb' }), express.urlencoded({ extended: true, limit: '50mb' }))
 app.use(express.static('public'))
+app.use(ejsLayouts)
 
 app.set('view engine', 'ejs')
 app.set('views', 'views')
