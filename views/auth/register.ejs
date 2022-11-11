@@ -12,49 +12,49 @@
             </div>
             <div class="field">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" placeholder="johnDoeSecure" required>
+                <input type="password" name="password" id="password" placeholder="14vQ!If6nWB#" required>
             </div>
             <div class="field">
                 <label for="confirmPassword">Confirm Password</label>
-                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="johnDoeSecure" required>
+                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="14vQ!If6nWB#" required>
             </div>
             <button class="reg-submit" type="submit">Submit</button>
 
         </form>
     </div>
+    <img src="/register.svg" alt="" style="width: 30vw;">
 </div>
 
 <style>
     .reg-submit {
-        background-color: #ff8906;
+        background-color: var(--violet);
         border: none;
         color: white;
-        padding: 15px 32px;
+        padding: 10px 20px;
         text-align: center;
         font-size: 24px;
         border-radius: 10px;
-        margin: 4px 2px;
+        margin: 40px 2px 4px;
         cursor: pointer;
         width: 200px;
     }
 
     .reg-container {
-        background-color: #0f0e17;
+        background-color: var(--black);
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: space-evenly;
         min-height: 100vh;
         min-width: 100vw;
     }
 
     .reg-form-container {
-        background-color: #f25f4c;
         padding: 1rem;
         border-radius: 1rem;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: center;
-        align-items: center;
+        align-items: left;
     }
 
     .reg-form-container form {
@@ -65,42 +65,42 @@
     }
 
     .reg-form-container label {
-        color: #0f0e17;
+        color: var(--grey);
         font-size: 14px;
+        margin-bottom: 0.8rem;
     }
-
+    
     .reg-form-container h1 {
-        color: #fffffe;
+        color: var(--violet);
         text-align: center;
         font-size: 52px;
         font-weight: 400;
         margin-bottom: 20px;
     }
-
+    
     .field {
         margin-bottom: 1rem;
         display: flex;
         flex-direction: column;
     }
-
+    
     .field input {
+        transition: border-color 0.3s ease-out;
         font-size: 16px;
-        padding: 0.5rem;
+        padding: 0.8rem 1rem;
         border: none;
         outline: none;
         background-color: transparent;
-        color: #fffffe;
+        color: var(--white);
         outline: 0;
         border-width: 0 0 2px;
-        border-color: #fffffe;
         width: 30vw;
-        border-bottom: 1px solid #fffffe;
-        padding: 5px 10px;
+        border: 2px solid var(--text);
         outline: none;
+        border-radius: 15px;
     }
 
     ::placeholder {
-        color: #fffffe;
         opacity: 60%;
     }
 
@@ -108,5 +108,9 @@
         transition: text-indent 0.4s 0.4s ease;
         text-indent: -100%;
         opacity: 1;
+    }
+    
+    .field input:focus{
+        border-color: var(--violet);
     }
 </style>
