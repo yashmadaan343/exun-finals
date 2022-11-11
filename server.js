@@ -10,11 +10,14 @@ const ejs  = require('ejs');
 const ejsLayouts = require('express-ejs-layouts');
 const cors = require('cors');
 const passportInit = require('./middleware/passport.js')
+var server = require('http').createServer(app);
+const io = require('socket.io')(server, { cors: { origin: '*' } });
 
 //file imports
 const landing = require('./routes/landing')
 const auth = require('./routes/auth')
 const admin = require('./routes/admin')
+const room = require('./routes/room')
 
 if (process.env.NODE_ENV === 'production') {
     app.enable('trust proxy');
@@ -72,8 +75,22 @@ mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true }).the
 app.use('/', landing)
 app.use('/auth', auth)
 app.use('/admin', admin)
-
+app.use('/room', room)
 
 //listen
 const PORT = process.env.PORT || 8080
-app.listen(PORT, () => console.log(`Connected on port ${PORT}`))
+server.listen(PORT, () => console.log(`Connected on port ${PORT}`))
+
+
+//socket.io
+io.on('connection', socket => {
+    socket.on('join-room', (roomId, userId) => {
+        console.log(roomId, userId)
+        socket.join(roomId)
+        socket.to(roomId).emit('user-connected', userId)
+
+        socket.on('disconnect', () => {
+            socket.to(roomId).emit('user-disconnected', userId)
+        })
+    })
+})
