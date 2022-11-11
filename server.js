@@ -18,6 +18,7 @@ const landing = require('./routes/landing')
 const auth = require('./routes/auth')
 const admin = require('./routes/admin')
 const room = require('./routes/room')
+const song = require('./routes/song')
 
 if (process.env.NODE_ENV === 'production') {
     app.enable('trust proxy');
@@ -76,6 +77,8 @@ app.use('/', landing)
 app.use('/auth', auth)
 app.use('/admin', admin)
 app.use('/room', room)
+app.use('/song', song)
+
 
 //listen
 const PORT = process.env.PORT || 8080
