@@ -5,7 +5,8 @@ const songSchema = new mongoose.Schema({
     name: reqString,
     artist: reqString,
     id: reqString,
-    album_img: reqString
+    album_img: reqString,
+    genre: reqString,
 })
 
 module.exports = mongoose.model("Song", songSchema)
