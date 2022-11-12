@@ -57,7 +57,8 @@
             </div>
         </div>
     </div>
-    <audio controls>
+    <audio id="AudioController" controls>
+        <source autoplay src="/song/play/Apocalypse" type="audio/mpeg">
         <source autoplay src="/song/play/Apocalypse" type="audio/mpeg">
     </audio>
 </div>
@@ -238,7 +239,7 @@
 </style>
 
 <script>
-    var songs = JSON.parse(JSON.stringify(<%- songs %>))
+    var songs = JSON.parse(JSON.stringify( < % -songs % > ))
     console.log(songs)
 </script>
 
@@ -302,4 +303,4 @@
         })
         videoGrid.append(video)
     }
-</script> 
+</script>
