@@ -17,7 +17,7 @@
                             </div>
                         </div>
                     </div>
-                    <% } %>
+                <% } %>
             </div>
 
             <div class="controls">
@@ -62,8 +62,7 @@
         </div>
     </div>
     <audio id="AudioController" controls>
-        <source autoplay src="/song/play/Apocalypse" type="audio/mpeg">
-        <source autoplay src="/song/play/Apocalypse" type="audio/mpeg">
+        <source autoplay src="" type="audio/mpeg">
     </audio>
 </div>
 <script src="https://unpkg.com/peerjs@1.1.0/dist/peerjs.min.js"></script>
@@ -252,8 +251,21 @@
 </style>
 
 <script>
-    var songs = JSON.parse(JSON.stringify( < % -songs % > ))
+    var songs = JSON.parse(JSON.stringify( <%-songs %> ))
     console.log(songs)
+    var audio = document.getElementById("AudioController");
+    var currentSong = 0;
+    
+    function playSong() {
+        audio.src = '/song/play'+songs[currentSong].name;
+        audio.play();
+        audio.addEventListener("ended", function() {
+            nextSong();
+        });
+    }
+    window.onload = function() {
+        playSong();
+    }
 </script>
 
 <script>

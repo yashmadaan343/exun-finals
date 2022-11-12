@@ -78,7 +78,6 @@ router.post('/login', async (req, res, next) => {
       res.send({ "msg": `${info.message}` })
     } else {
       req.logIn(user, (err) => {
-        console.log(user);
         if (err) throw err;
         res.redirect('/dashboard');
       });

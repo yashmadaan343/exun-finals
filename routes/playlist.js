@@ -84,4 +84,14 @@ router.get("/:id/add/:name", ensureAuthenticated,  (req, res) => {
     })
 })
 
+router.get('/all', ensureAuthenticated, async (req, res)=>{
+    User.findOne(req.user, (docs, err)=>{
+        if(err){
+            res.send(err)
+        }else{
+            res.render('playlist/playlists', {playlists: docs.playlists})
+        }
+    })
+})
+
 module.exports = router;
