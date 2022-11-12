@@ -1,63 +1,124 @@
 <div class="room">
     <h1>
-        Room: ik
+        Room: <%= roomid %> 
     </h1>
     <div class="room-container">
         <div class="music">
             <div class="playlist">
                 <div class="current song">
-                    <img src="/bang.png" alt="">
+                    <img src="/bang.png" alt="" class="song-image">
                     <div class="song-controls">
-                        <div class="prev"></div>
-                        <div class="details">
-                            <div class="song-name">Bury Me Face Down</div>
-                            <div class="artist-name">grandson</div>
+                        <div class="about">
+                            <div class="prev"><img src="/prev.svg" alt=""></div>
+                            <div class="details">
+                                <div class="song-name">Bury Me Face Down</div>
+                                <div class="artist-name">grandson</div>
+                            </div>
+                                <div class="next"><img src="/next.svg" alt=""></div>
+                                
                         </div>
-                        <div class="next"></div>
+                        <div class="song-timeline"></div>
                     </div>
                 </div>
                 <div class="upnext song">
-                    <img src="/bang.png" alt="">
+                    <img src="/bang.png" alt="" class="song-image">
+                    <div class="details">
+                        <div class="song-name">BEST FRIENDS</div>
+                        <div class="artist-name">grandson</div>
+                    </div>
+                </div>
+                <div class="upnext song">
+                    <img src="/bang.png" alt="" class="song-image">
+                    <div class="details">
+                        <div class="song-name">Blood // Water</div>
+                        <div class="artist-name">grandson</div>
+                    </div>
+                </div>
+                <div class="upnext song">
+                    <img src="/bang.png" alt="" class="song-image">
+                    <div class="details">
+                        <div class="song-name">Apologize</div>
+                        <div class="artist-name">grandson</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <h2>Volume</h2>
+                <input type="range" name="" class="slider" value="30" min="0" max="100"
+                    oninput="document.getElementById('vol').innerText = this.value">
+                <p id="vol">0</p>
+                <div class="control-buttons">
+                    <button>Request Owner</button>
+                    <button>Suggest Song</button>
                 </div>
             </div>
         </div>
         <div id="video-grid">
             <div class="participant">
-                <h4 class="participant-name">Aayush Garg</h4>
+                <div class="participant-details">
+                    <h4 class="participant-name">Aayush Garg</h4>
+                    <div class="mic"><img src="/mute.svg" alt=""></div>
+                </div>
                 <video></video>
             </div>
             <div class="participant">
-                <h4 class="participant-name">Aayush Garg</h4>
+                <div class="participant-details">
+                    <h4 class="participant-name">Aayush Garg</h4>
+                    <div class="mic"><img src="/mute.svg" alt=""></div>
+                </div>
                 <video></video>
             </div>
             <div class="participant" style="outline: 3px solid var(--violet)">
-                <h4 class="participant-name">Aayush Garg</h4>
+                <div class="participant-details">
+                    <h4 class="participant-name">Aayush Garg</h4>
+                    <div class="mic"><img src="/unmute.svg" alt=""></div>
+                </div>
                 <video></video>
             </div>
             <div class="participant">
-                <h4 class="participant-name">Aayush Garg</h4>
+                <div class="participant-details">
+                    <h4 class="participant-name">Aayush Garg</h4>
+                </div>
                 <video></video>
             </div>
             <div class="participant">
-                <h4 class="participant-name">Aayush Garg</h4>
+                <div class="participant-details">
+                    <h4 class="participant-name">Aayush Garg</h4>
+                </div>
                 <video></video>
             </div>
             <div class="participant">
-                <h4 class="participant-name">Aayush Garg</h4>
+                <div class="participant-details">
+                    <h4 class="participant-name">Aayush Garg</h4>
+                </div>
                 <video></video>
             </div>
             <div class="participant">
-                <h4 class="participant-name">Aayush Garg</h4>
+                <div class="participant-details">
+                    <h4 class="participant-name">Aayush Garg</h4>
+                </div>
                 <video></video>
             </div>
             <div class="participant">
-                <h4 class="participant-name">Aayush Garg</h4>
+                <div class="participant-details">
+                    <h4 class="participant-name">Aayush Garg</h4>
+                </div>
                 <video></video>
             </div>
             <div class="participant">
-                <h4 class="participant-name">Aayush Garg</h4>
+                <div class="participant-details">
+                    <h4 class="participant-name">Aayush Garg</h4>
+                </div>
                 <video></video>
             </div>
+            <div class="participant">
+                <div class="participant-details">
+                    <h4 class="participant-name">Aayush Garg</h4>
+                </div>
+                <video></video>
+            </div>
+
         </div>
     </div>
 </div>
@@ -93,6 +154,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, 200px);
         grid-auto-rows: 250px;
+        padding-bottom: 20px;
     }
 
     video {
@@ -115,19 +177,30 @@
         margin: 15px 5px;
     }
 
+    .participant-details {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 10px;
+    }
+
+    .mic img {
+        width: 15px;
+    }
+
     .music {
         width: 30vw;
-        height: 100vh;
     }
 
     .playlist {
         background-color: var(--overlay-grey);
-        padding: 50px;
+        padding: 30px;
         border-radius: 20px;
         margin: 0 40px;
     }
 
-    .playlist img {
+    .playlist .song-image {
         width: 60px;
         height: 60px;
         border-radius: 20px;
@@ -142,6 +215,83 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+    }
+
+    .upnext .details {
+        margin-left: 20px;
+    }
+
+    .current .details {
+        text-align: center;
+    }
+
+    .details .song-name {
+        color: var(--white);
+    }
+
+    .song-controls img {
+        width: 20px;
+        height: 20px;
+        margin: 0px 8px;
+    }
+
+    .about {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .song-timeline {
+        height: 2px;
+        width: 100%;
+        background-color: var(--grey);
+        margin: 10px 5px;
+        border-radius: 1px;
+    }
+
+    .current {
+        margin-bottom: 30px;
+    }
+
+    .controls {
+        padding: 30px;
+        background-color: var(--overlay-grey);
+        border-radius: 20px;
+        margin: 20px 40px;
+    }
+
+    .controls input[type="range"] {
+        -webkit-appearance: none !important;
+        height: 10px;
+        background: var(--text);
+        border: none;
+        outline: none;
+        border-radius: 3px;
+    }
+    
+    .controls input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none !important;
+        border-radius: 3px;
+        width: 10px;
+        height: 10px;
+        background: var(--violet);
+        cursor: pointer;
+    }
+
+    button {
+        background-color: var(--violet);
+        border: none;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 4px 2px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .control-buttons {
+        margin: 20px 10px;
     }
 </style>
 
@@ -208,4 +358,15 @@
         })
         videoGrid.append(video)
     }
+    window.onload = ()=>{
+        sliderUpdate()
+    }
+    var slider=document.getElementsByClassName("slider")[0]
+    slider.oninput = function () {
+        sliderUpdate()
+    };
+    function sliderUpdate() {
+   var val = slider.value
+   document.getElementById('vol').innerHTML = val
+}
 </script>

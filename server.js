@@ -19,6 +19,7 @@ const auth = require('./routes/auth')
 const admin = require('./routes/admin')
 const room = require('./routes/room')
 const song = require('./routes/song')
+const join = require('./routes/join')
 
 if (process.env.NODE_ENV === 'production') {
     app.enable('trust proxy');
@@ -78,6 +79,7 @@ app.use('/auth', auth)
 app.use('/admin', admin)
 app.use('/room', room)
 app.use('/song', song)
+app.use('/join', join)
 
 
 //listen
