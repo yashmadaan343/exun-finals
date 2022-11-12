@@ -2,3 +2,95 @@
 <h3><%= song.artist %> </h3>
 <img src="<%=song.album_img%>" alt="song_image">
 <p>Genre: <%=song.genre%> </p>
+
+
+<div id="modalOne" class="modal">
+    <div class="modal-content">
+        <div class="contact-form">
+            <a class="close">&times;</a>
+            <h2>Add Song To Playlist</h2>
+            <form id="form-choose">
+                <label for="playlists">Choose a playlist:</label>
+                <select name="playlists" id="playlists">
+                    <% if (user.playlists.length>0){ %>
+                    <% for (let i = 0; i < user.playlists.length; i++) { %>
+                    <option value="<%= user.playlists[i].name %>"><%= user.playlists[i].name %></option>
+                    <% } %>
+                    <% } %>
+
+                </select>
+                <br><br>
+                <button type="submit">Add!</button>
+            </form>
+            <form action="/playlist/new" method="POST">
+                <label for="name">Make A New Playlist</label>
+                <input type="text" id="name" name="name"><br>
+                <button type="submit">Create</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var notyf = new Notyf();
+
+    const whiteHeart = "far fa-heart";
+    const blackHeart = "fas fa-heart";
+
+    document.getElementById('form-choose').addEventListener("submit",
+        function (evt) {
+            evt.preventDefault();
+            var playlist = document.getElementById('playlists').value;
+            var song = "<%= song.name %>";
+            fetch('/playlist/' + playlist + '/add/' + song, {
+                method: 'GET',
+            }).then(function (response) {
+                console.log(response)
+                if (response.status == 200) {
+                    notyf.success('Added to playlist!');
+                } else {
+                    notyf.error('Something went wrong!');
+                }
+            });
+        });
+
+
+
+
+
+
+
+    var aud = document.getElementById("audio");
+    aud.addEventListener("ended", function () {
+        aud.currentTime = 0;
+        playnext();
+    });
+
+</script>
+
+<style>
+</style>
+
+<script>
+    let modalBtns = [...document.querySelectorAll(".button")];
+    modalBtns.forEach(function (btn) {
+        btn.onclick = function () {
+            let modal = btn.getAttribute('data-modal');
+            document.getElementById(modal)
+                .style.display = "block";
+        }
+    });
+    let closeBtns = [...document.querySelectorAll(".close")];
+    closeBtns.forEach(function (btn) {
+        btn.onclick = function () {
+            let modal = btn.closest('.modal');
+            modal.style.display = "none";
+        }
+    });
+    window.onclick = function (event) {
+        if (event.target.className === "modal") {
+            event.target.style.display = "none";
+        }
+    }
+</script>

@@ -5,6 +5,16 @@ const mongoose = require('mongoose'),
     moment = require('moment'),
     now = new Date(),
     dateStringWithTime = moment(now).format('YYYY-MM-DD HH:MM:SS');
+const passportLocalMongoose = require("passport-local-mongoose");
+const playlistSchema = new mongoose.Schema({
+    name: reqString,
+    id: reqString,
+    songs: {type: Array, required: true},
+    date: {
+        type:String,
+        default: dateStringWithTime
+    },
+})
 
 const userSchema = new mongoose.Schema({
     email: reqString,
@@ -17,7 +27,9 @@ const userSchema = new mongoose.Schema({
     userId: reqString,
     admin: reqBoolean,
     pfp: {type:String, default:"https://www.nicepng.com/png/detail/933-9332131_profile-picture-default-png.png"},
-    access_token: {type: String, default: ""}
+    access_token: {type: String, default: ""},
+    playlists: [playlistSchema]
 })
+userSchema.plugin(passportLocalMongoose)
 
 module.exports = mongoose.model("User", userSchema)

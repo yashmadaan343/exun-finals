@@ -40,24 +40,24 @@ router.get('/play/:name',async(req, res)=>{
     }
 })
 
-router.get('/details/:name', async (req, res)=>{
+router.get('/details/:name',ensureAuthenticated, async (req, res)=>{
         Song.findOne({name: req.params.name}, (err, song)=>{
             if(err){
                 res.send("Something went wrong!")
                 console.log(err)
             }else{
-                res.render('song/details', {song})
+                res.render('song/details', {song, user:req.user})
             }
         })
 })
 
-router.get('/all', async (req, res)=>{
+router.get('/all', ensureAuthenticated, async (req, res)=>{
     Song.find({}, (err, songs)=>{
         if(err){
             res.send("Something went wrong!")
             console.log(err)
         }else{
-            res.render('song/songs', {songs})
+            res.render('song/songs', {songs, user:req.user})
         }
     })
 

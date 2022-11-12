@@ -27,6 +27,7 @@
     "mongoose": "^6.7.2",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^7.1.2",
     "socket.io": "^4.5.3",
     "spotify-web-api-node": "^5.0.2",
     "uuidv4": "^6.2.13"

@@ -22,6 +22,7 @@ const song = require('./routes/song');
 const roomSchema = require("./schemas/roomSchema.js");
 const profile = require('./routes/profile')
 const join = require('./routes/join')
+const playlist = require('./routes/playlist')
 
 if (process.env.NODE_ENV === 'production') {
     app.enable('trust proxy');
@@ -84,6 +85,7 @@ app.use('/room', room)
 app.use('/song', song)
 app.use('/join', join)
 app.use('/profile', profile)
+app.use('/playlist', playlist)
 
 
 //listen
