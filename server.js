@@ -44,6 +44,7 @@ app.use(cors(corsOptions))
 //middlewares
 app.use(express.json({ limit: '50mb' }), express.urlencoded({ extended: true, limit: '50mb' }))
 app.use(express.static('public'))
+app.use(express.static('songs'))
 app.use(ejsLayouts)
 
 app.set('view engine', 'ejs')

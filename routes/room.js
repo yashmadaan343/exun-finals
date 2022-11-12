@@ -43,6 +43,11 @@ router.post('/newroom', ensureAuthenticated, (req, res) => {
     }).catch(err => console.log(err))
 })
 
+router.get('/find', ensureAuthenticated, async (req, res)=> {
+    const rooms = await roomSchema.find({private:false})
+    res.render('dashboard/findroom', {user:req.user, rooms})
+})
+
 //join a audio room by :id
 router.get('/:id', ensureAuthenticated, async (req, res) => {
     roomSchema.findOne({id: req.params.id}, async  (err, room) => {
@@ -60,5 +65,7 @@ router.get('/:id', ensureAuthenticated, async (req, res) => {
         }
     });
 });
+
+
 
 module.exports = router
