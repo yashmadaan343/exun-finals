@@ -16,7 +16,8 @@ const userSchema = new mongoose.Schema({
     },
     userId: reqString,
     admin: reqBoolean,
-    pfp: {type:String, default:"https://www.nicepng.com/png/detail/933-9332131_profile-picture-default-png.png"}
+    pfp: {type:String, default:"https://www.nicepng.com/png/detail/933-9332131_profile-picture-default-png.png"},
+    access_token: {type: String, default: ""}
 })
 
 module.exports = mongoose.model("User", userSchema)

@@ -1,0 +1,25 @@
+<form action="/profile/edit" method="post">
+    <input type="text" name="name" id="name" value="<%=user.name%>" required> <br>
+    <input type="text" name="email" id="email" value="<%=user.email%>" required> <br>
+    <img src="<%=user.pfp%> " alt=""> <br>
+    <input type="text" name="pfp" id="pfp" value="<%=user.pfp%>" required><br>
+    <button type="submit">Save edited profile</button><br>
+</form>
+
+<% if(name){%> 
+    Now playing: <%= name %> <br>
+    By: <%= artist %> <br>
+    <img src="<%=image%> " alt=""><br>
+<%} %> 
+
+<a href="/profile/connect-spotify">Connect Spotify</a><br>
+
+
+<style>
+    img{
+        padding-bottom: 20px;
+        padding-top: 20px;
+        height:200px;
+        width:200px;
+    }
+</style>
