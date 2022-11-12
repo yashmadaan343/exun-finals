@@ -1,35 +1,59 @@
 const { raw } = require('body-parser');
 const { ensureAuthenticated } = require('../middleware/authenticate');
 const roomSchema = require('../schemas/roomSchema');
+const songSchema = require('../schemas/songSchema');
 const uuid = require('uuid').v4;
 const router = require('express').Router();
 
-router.get('/newroom', ensureAuthenticated, (req, res) => {
-    res.render('dashboard/newroom');
+router.get('/newroom', ensureAuthenticated, async (req, res) => {
+    var songs = await songSchema.find({}).sort({ songName: 1 });
+    res.render('dashboard/newroom', { songs: songs });
 })
 
 router.post('/newroom', ensureAuthenticated, (req, res) => {
-    const { name, users, playlist, currentSong } = req.body;
-    const room = new roomSchema({
-        name,
-        author: req.user._id,
-        id: uuid(),
-        users,
-        playlist,
-        currentSong
-    })
-    room.save()
-        .then(() => {
-            res.redirect('/dashboard')
+    const { name, playlist, currentSong, password, private } = req.body;
+    console.log(req.body);
+    var id = uuid();
+    var room;
+    if (private == true) {
+        room = new roomSchema({
+            name,
+            author: req.user._id,
+            id,
+            users: [],
+            playlist,
+            //currentSong,
+            private: true,
+            password
+        });
+    } else {
+        room = new roomSchema({
+            name,
+            author: req.user._id,
+            id,
+            users: [],
+            private: false,
+            password: '',
+            playlist,
+            //currentSong
         })
-        .catch(err => console.log(err))
+    }
+    room.save().then(() => {
+        res.send({roomId: id});
+    }).catch(err => console.log(err))
 })
 
 //join a audio room by :id
-router.get('/:id', ensureAuthenticated, (req, res) => {
-    roomSchema.findById(req.params.id, (err, room) => {
-        if (room){
-            res.render('dashboard/room', { roomid: req.params.id, user: req.user, socketurl: process.env.SOCKET_URL });
+router.get('/:id', ensureAuthenticated, async (req, res) => {
+    roomSchema.findOne({id: req.params.id}, async  (err, room) => {
+        console.log(room);
+        var songs = await room.playlist.map(async song => await songSchema.findOne({_id: song}));
+        songs = await Promise.all(songs);
+        songs = await songs.map(song => song.toObject());
+        songs = await Promise.all(songs);
+        songs = JSON.stringify(songs);
+        if (room) {
+            res.render('dashboard/room1', { roomid: req.params.id, user: req.user, socketurl: process.env.SOCKET_URL, songs:await songs });
         }
         else {
             res.redirect('/room/newroom');

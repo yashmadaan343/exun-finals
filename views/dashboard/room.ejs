@@ -61,10 +61,6 @@
         if (peers[userId]) peers[userId].close()
     })
 
-    myPeer.on('open', id => {
-        socket.emit('join-room', "<%= roomid %>", id)
-    })
-
     function connectToNewUser(userId, stream) {
         const call = myPeer.call(userId, stream)
         const video = document.createElement('video')

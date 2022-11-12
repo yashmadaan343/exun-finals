@@ -8,9 +8,10 @@ const roomSchema = new mongoose.Schema({
     name: reqString,
     author: reqString,
     id: reqString,
-    users: reqString,
-    playlist: reqStringNoRequired,
+    users: [reqString],
+    playlist: [reqStringNoRequired],
     private: reqBool,
+    password: reqStringNoRequired,
     currentSong: reqStringNoRequired
 })
 

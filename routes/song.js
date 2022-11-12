@@ -60,7 +60,6 @@ router.get('/all', ensureAuthenticated, async (req, res)=>{
             res.render('song/songs', {songs, user:req.user})
         }
     })
-
 })
 
 module.exports = router;

@@ -79,7 +79,7 @@ router.post('/login', async (req, res, next) => {
     } else {
       req.logIn(user, (err) => {
         if (err) throw err;
-        res.send({ "msg": "Successfully Authenticated", "success": true });
+        res.redirect('/dashboard');
       });
     }
   })(req, res, next);

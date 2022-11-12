@@ -1,46 +1,23 @@
 <div class="room">
     <h1>
-        Room: <%= roomid %> 
+        Room: <%= roomid %>
     </h1>
     <div class="room-container">
         <div class="music">
             <div class="playlist">
-                <div class="current song">
-                    <img src="/bang.png" alt="" class="song-image">
-                    <div class="song-controls">
-                        <div class="about">
-                            <div class="prev"><img src="/prev.svg" alt=""></div>
-                            <div class="details">
-                                <div class="song-name">Bury Me Face Down</div>
-                                <div class="artist-name">grandson</div>
+                <% for (i in JSON.parse(songs)){ %>
+                    <div class="upnext song" id="<%= JSON.parse(songs)[i]._id %>">
+                        <img src="<%= JSON.parse(songs)[i].album_img %>" alt="" class="song-image">
+                        <div class="details">
+                            <div class="song-name">
+                                <%= JSON.parse(songs)[i].name %>
                             </div>
-                                <div class="next"><img src="/next.svg" alt=""></div>
-                                
+                            <div class="artist-name">
+                                <%= JSON.parse(songs)[i].artist %>
+                            </div>
                         </div>
-                        <div class="song-timeline"></div>
                     </div>
-                </div>
-                <div class="upnext song">
-                    <img src="/bang.png" alt="" class="song-image">
-                    <div class="details">
-                        <div class="song-name">BEST FRIENDS</div>
-                        <div class="artist-name">grandson</div>
-                    </div>
-                </div>
-                <div class="upnext song">
-                    <img src="/bang.png" alt="" class="song-image">
-                    <div class="details">
-                        <div class="song-name">Blood // Water</div>
-                        <div class="artist-name">grandson</div>
-                    </div>
-                </div>
-                <div class="upnext song">
-                    <img src="/bang.png" alt="" class="song-image">
-                    <div class="details">
-                        <div class="song-name">Apologize</div>
-                        <div class="artist-name">grandson</div>
-                    </div>
-                </div>
+                    <% } %>
             </div>
 
             <div class="controls">
@@ -82,45 +59,11 @@
                 </div>
                 <video></video>
             </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-
         </div>
     </div>
+    <audio controls>
+        <source autoplay src="/song/play/Apocalypse" type="audio/mpeg">
+    </audio>
 </div>
 <script src="https://unpkg.com/peerjs@1.1.0/dist/peerjs.min.js"></script>
 <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"
@@ -134,6 +77,7 @@
         display: flex;
         flex-direction: column;
         overflow-x: hidden;
+        min-height: 100vh;
     }
 
     .room h1 {
@@ -198,6 +142,8 @@
         padding: 30px;
         border-radius: 20px;
         margin: 0 40px;
+        overflow-y: scroll;
+        height: 40vh;
     }
 
     .playlist .song-image {
@@ -266,12 +212,12 @@
         background: var(--text);
         border: none;
         outline: none;
-        border-radius: 3px;
+        border-radius: 5px;
     }
-    
+
     .controls input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none !important;
-        border-radius: 3px;
+        border-radius: 5px;
         width: 10px;
         height: 10px;
         background: var(--violet);
@@ -293,8 +239,21 @@
     .control-buttons {
         margin: 20px 10px;
     }
+
+    audio {
+        display: absolute;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+    }
 </style>
 
+<script>
+    var songs = JSON.parse(JSON.stringify(<%- songs %>))
+    console.log(songs)
+</script>
 
 <script>
     var socket = io('<%= socketurl %>');
@@ -307,11 +266,13 @@
         host: 'exunpeer.herokuapp.com',
         port: 443
     })
+
     myPeer.on('open', id => {
         socket.emit('join-room', '<%= roomid %>', id)
     })
 
     const myVideo = document.createElement('video')
+    myVideo.muted = true // add a unmute button later
     const peers = {}
     navigator.mediaDevices.getUserMedia({
         audio: true,
@@ -334,10 +295,6 @@
         if (peers[userId]) peers[userId].close()
     })
 
-    myPeer.on('open', id => {
-        socket.emit('join-room', "<%= roomid %>", id)
-    })
-
     function connectToNewUser(userId, stream) {
         const call = myPeer.call(userId, stream)
         const video = document.createElement('video')
@@ -358,15 +315,4 @@
         })
         videoGrid.append(video)
     }
-    window.onload = ()=>{
-        sliderUpdate()
-    }
-    var slider=document.getElementsByClassName("slider")[0]
-    slider.oninput = function () {
-        sliderUpdate()
-    };
-    function sliderUpdate() {
-   var val = slider.value
-   document.getElementById('vol').innerHTML = val
-}
 </script>
