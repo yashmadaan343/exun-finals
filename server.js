@@ -19,6 +19,7 @@ const auth = require('./routes/auth')
 const admin = require('./routes/admin')
 const room = require('./routes/room')
 const song = require('./routes/song')
+const profile = require('./routes/profile')
 const join = require('./routes/join')
 
 if (process.env.NODE_ENV === 'production') {
@@ -60,6 +61,7 @@ if (process.env.NODE_ENV === 'production') {
         secret: process.env.SESSION_SECRET,
         resave: true,
         saveUninitialized: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }));
 } 
 app.use(cookieParser(process.env.SESSION_SECRET));
@@ -80,10 +82,11 @@ app.use('/admin', admin)
 app.use('/room', room)
 app.use('/song', song)
 app.use('/join', join)
+app.use('/profile', profile)
 
 
 //listen
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 3000
 server.listen(PORT, () => console.log(`Connected on port ${PORT}`))
 
 
