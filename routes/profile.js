@@ -27,7 +27,6 @@ router.get('/spotify-callback', (req, res, next)=>{
             const access_token = data.body['access_token']
             console.log(access_token)
             const user = await User.findOneAndUpdate({userId:req.user.userId}, {access_token})
-            console.log(user)
             spotifyApi.setAccessToken(data.body['access_token']);
             spotifyApi.setRefreshToken(data.body['refresh_token']);
         }).then(()=>{
@@ -36,10 +35,9 @@ router.get('/spotify-callback', (req, res, next)=>{
 })
 
 router.get('/', ensureAuthenticated, async (req, res) => {
+    console.log(spotifyApi.getAccessToken())
     const user = await User.findOne({userId:req.user.userId})
-    if(user.access_token != ""){
-        const token = user.access_token
-        spotifyApi.setAccessToken(token)
+    if(spotifyApi.getAccessToken()){
         spotifyApi.getMyCurrentPlayingTrack()
         .then(async function(data) {
             const song = data.body.item
