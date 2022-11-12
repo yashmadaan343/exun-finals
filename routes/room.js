@@ -1,3 +1,4 @@
+const { raw } = require('body-parser');
 const { ensureAuthenticated } = require('../middleware/authenticate');
 const roomSchema = require('../schemas/roomSchema');
 const uuid = require('uuid').v4;
@@ -34,6 +35,6 @@ router.get('/:id', ensureAuthenticated, (req, res) => {
             res.redirect('/room/newroom');
         }
     });
-})
+});
 
 module.exports = router

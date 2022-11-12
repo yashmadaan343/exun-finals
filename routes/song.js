@@ -49,6 +49,17 @@ router.get('/details/:name', async (req, res)=>{
                 res.render('song/details', {song})
             }
         })
+})
+
+router.get('/all', async (req, res)=>{
+    Song.find({}, (err, songs)=>{
+        if(err){
+            res.send("Something went wrong!")
+            console.log(err)
+        }else{
+            res.render('song/songs', {songs})
+        }
+    })
 
 })
 
