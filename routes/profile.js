@@ -39,16 +39,19 @@ router.get('/', ensureAuthenticated, async (req, res) => {
         spotifyApi.setAccessToken(token)
         spotifyApi.getMyCurrentPlayingTrack()
         .then(async function(data) {
-            const song = await data.body.item
-            const name = song.name
-            const artist = song.artists[0].name
-            const image = await song.album.images[0].url
-            res.render('profile', {user: req.user, name, artist, image})
+            const song = data.body.item
+            if(!song) res.render('profile', {user: req.user, name:" "})
+            else {
+                const name = song.name
+                const artist = song.artists[0].name
+                const image = await song.album.images[0].url    
+                res.render('profile', {user: req.user, name, artist, image})
+            }
         }, function(err) {
             console.log('Something went wrong!', err);
         });    
     }else{
-        res.render('profile', {user: req.user})
+        res.render('profile', {user: req.user, name:" "})
     }
 })
 

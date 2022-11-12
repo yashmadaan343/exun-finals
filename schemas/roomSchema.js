@@ -15,4 +15,4 @@ const roomSchema = new mongoose.Schema({
     currentSong: reqStringNoRequired
 })
 
-module.exports = mongoose.model("Rooms", roomSchema)
+module.exports = mongoose.model("Room", roomSchema)

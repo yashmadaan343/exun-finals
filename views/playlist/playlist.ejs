@@ -1,0 +1,86 @@
+<div class="master-container">
+    <div class="playlist-Container">
+        <h1>Playlist : <%= playlist.name %></h1>
+
+        <div class="playlis-song-container">
+            <% if (songs.length >0 ) { %>
+            <% for (let i = 0; i < songs.length; i++) { %>
+            <div id="<%= songs[i].id %>" class="playlis-song_card" onclick="playSong('<%= songs[i].name %>')">
+                <div class="playlis-song-image">
+                    <img width="100" height="100" src="<%= songs[i].album_img %>" alt="">
+                </div>
+                <div class="playlis-song-info">
+                    <h2><%= songs[i].name %></h2>
+                    <h3><%= songs[i].artist %></h3>
+                </div>
+            </div>
+            <% } %>
+            <% } else { %>
+            <h2>No songs found</h2>
+            <% } %>
+        </div>
+    </div>
+    <div class="audio-player">
+        <audio id="audio" controls>
+            <source src="" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+</div>
+
+<style>
+    .master-container {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 100px);
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .playlis-song_card {
+        display: flex;
+    }
+
+    .playlis-song-container {
+        margin-bottom: 100px;
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+    }
+
+    .playlist-Container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .audio-player {
+        position: fixed;
+        bottom: 0;
+    }
+</style>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        playSong = (name) => {
+            document.getElementById('audio').src = `/song/play/${name}`;
+            document.getElementById('audio').play();
+        }
+
+        var aud = document.getElementById("audio");
+        aud.addEventListener("ended", function () {
+            aud.currentTime = 0;
+            playnext();
+        });
+
+        function playnext() {
+            console.log(song_ids);
+            if (song_ids.indexOf(lastSong) == song_ids.length - 1) {
+                playSong(song_ids[0]);
+            } else {
+                playSong(song_ids[song_ids.indexOf(lastSong) + 1]);
+            }
+        }
+    });
+</script>
