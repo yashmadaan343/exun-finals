@@ -53,7 +53,7 @@ router.get('/:id', ensureAuthenticated, async (req, res) => {
         songs = await Promise.all(songs);
         songs = JSON.stringify(songs);
         if (room) {
-            res.render('dashboard/room1', { roomid: req.params.id, user: req.user, socketurl: process.env.SOCKET_URL, songs:await songs });
+            res.render('dashboard/room1', { roomid: req.params.id, user: req.user, socketurl: process.env.SOCKET_URL, songs:await songs, roomname: room.name});
         }
         else {
             res.redirect('/room/newroom');
