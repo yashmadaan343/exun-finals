@@ -57,10 +57,9 @@ router.get('/all', async (req, res)=>{
             res.send("Something went wrong!")
             console.log(err)
         }else{
-            res.render('song/songs', {songs})
+            res.send({songs})
         }
     })
-
 })
 
 module.exports = router;

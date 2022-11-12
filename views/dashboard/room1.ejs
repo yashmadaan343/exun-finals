@@ -1,6 +1,6 @@
 <div class="room">
     <h1>
-        Room: <%= roomid %> 
+        Room: <%= roomid %>
     </h1>
     <div class="room-container">
         <div class="music">
@@ -11,36 +11,23 @@
                         <div class="about">
                             <div class="prev"><img src="/prev.svg" alt=""></div>
                             <div class="details">
-                                <div class="song-name">Bury Me Face Down</div>
-                                <div class="artist-name">grandson</div>
+                                <div class="song-name" id="current-song-name">Bury Me Face Down</div>
+                                <div class="artist-name" id="current-song-artist">grandson</div>
                             </div>
-                                <div class="next"><img src="/next.svg" alt=""></div>
-                                
+                            <div class="next"><img src="/next.svg" alt=""></div>
                         </div>
                         <div class="song-timeline"></div>
                     </div>
                 </div>
+                <% for (i in songs){ %>
                 <div class="upnext song">
-                    <img src="/bang.png" alt="" class="song-image">
+                    <img src="<%= songs[i].album_img %>" alt="" class="song-image">
                     <div class="details">
-                        <div class="song-name">BEST FRIENDS</div>
-                        <div class="artist-name">grandson</div>
+                        <div class="song-name"><%= songs[i].name %></div>
+                        <div class="artist-name"><%= songs[i].artist %></div>
                     </div>
                 </div>
-                <div class="upnext song">
-                    <img src="/bang.png" alt="" class="song-image">
-                    <div class="details">
-                        <div class="song-name">Blood // Water</div>
-                        <div class="artist-name">grandson</div>
-                    </div>
-                </div>
-                <div class="upnext song">
-                    <img src="/bang.png" alt="" class="song-image">
-                    <div class="details">
-                        <div class="song-name">Apologize</div>
-                        <div class="artist-name">grandson</div>
-                    </div>
-                </div>
+                <% } %>
             </div>
 
             <div class="controls">
@@ -125,7 +112,7 @@
 <script src="https://unpkg.com/peerjs@1.1.0/dist/peerjs.min.js"></script>
 <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"
     integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi" crossorigin="anonymous">
-    </script>
+</script>
 
 <style>
     .room {
@@ -134,6 +121,7 @@
         display: flex;
         flex-direction: column;
         overflow-x: hidden;
+        min-height: 100vh;
     }
 
     .room h1 {
@@ -268,7 +256,7 @@
         outline: none;
         border-radius: 3px;
     }
-    
+
     .controls input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none !important;
         border-radius: 3px;
@@ -295,8 +283,11 @@
     }
 </style>
 
-
 <script>
+    var songs = "<%= songs %>"
+</script>
+
+<!-- <script>
     var socket = io('<%= socketurl %>');
     const videoGrid = document.getElementById('video-grid')
     navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
@@ -307,6 +298,7 @@
         host: 'exunpeer.herokuapp.com',
         port: 443
     })
+
     myPeer.on('open', id => {
         socket.emit('join-room', '<%= roomid %>', id)
     })
@@ -334,10 +326,6 @@
         if (peers[userId]) peers[userId].close()
     })
 
-    myPeer.on('open', id => {
-        socket.emit('join-room', "<%= roomid %>", id)
-    })
-
     function connectToNewUser(userId, stream) {
         const call = myPeer.call(userId, stream)
         const video = document.createElement('video')
@@ -358,15 +346,4 @@
         })
         videoGrid.append(video)
     }
-    window.onload = ()=>{
-        sliderUpdate()
-    }
-    var slider=document.getElementsByClassName("slider")[0]
-    slider.oninput = function () {
-        sliderUpdate()
-    };
-    function sliderUpdate() {
-   var val = slider.value
-   document.getElementById('vol').innerHTML = val
-}
-</script>
+</script> -->

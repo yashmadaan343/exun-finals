@@ -1,17 +1,744 @@
 <div class="reg-container">
-    <div class="reg-form-container">
-        <form action="/auth/login" method="post">
+    <div class="reg-formm-container">
+        <div class="formm">
             <h1>New Room</h1>
             <div class="field">
-                <label for="email">Email ID</label>
-                <input type="text" name="email" id="email" placeholder="Email">
+                <label for="name">Room Name</label>
+                <input type="text" name="name" id="name" placeholder="Room Name">
             </div>
             <div class="field">
-                <label for="password">Password ID</label>
-                <input type="password" name="password" id="password" placeholder="Password">
+                <label for="privatetoggle">Private Room</label>
+                <label class="switch">
+                    <input id="privatetoggle" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
             </div>
-            <button type="submit" class="reg-submit">Submit</button>
-        </form>
+            <div class="field">
+                <label hidden id="password-label" for="password">Room Password</label>
+                <input hidden type="text" name="password" id="password" placeholder="Password">
+            </div>
+            <div class="field">
+                <select multiple="multiple" id="myMulti">
+                    <% for (i in songs){ %>
+                    <option value="<%= songs[i]._id %>"><%= songs[i].name %></option>
+                    <% } %>
+                </select>
+                <button onclick="newroomSub()" type="submit" class="reg-submit">Create</button>
+            </div>
+        </div>
+        <img src="/logo.svg" alt="" style="width: 30vw;">
     </div>
-    <img src="/logo.svg" alt="" style="width: 30vw;">
 </div>
+
+<style>
+    .reg-submit {
+        background-color: var(--violet);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 24px;
+        border-radius: 10px;
+        margin: 40px 2px 4px;
+        cursor: pointer;
+        width: 200px;
+    }
+
+    .reg-container {
+        background-color: var(--black);
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        min-height: 100vh;
+        min-width: 100vw;
+    }
+
+    .reg-formm-container {
+        border-radius: 1rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: left;
+    }
+
+    .formm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .reg-formm-container label {
+        color: var(--grey);
+        font-size: 14px;
+        margin-bottom: 0.8rem;
+    }
+
+    .reg-formm-container h1 {
+        color: var(--violet);
+        text-align: center;
+        font-size: 52px;
+        font-weight: 400;
+        margin-bottom: 20px;
+    }
+
+    .field {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .field input {
+        transition: border-color 0.3s ease-out;
+        font-size: 16px;
+        padding: 0.8rem 1rem;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        color: var(--white);
+        outline: 0;
+        border-width: 0 0 2px;
+        width: 30vw;
+        border: 2px solid var(--text);
+        outline: none;
+        border-radius: 15px;
+    }
+
+    ::placeholder {
+        opacity: 60%;
+    }
+
+    [placeholder]:focus::-webkit-input-placeholder {
+        transition: text-indent 0.4s 0.4s ease;
+        text-indent: -100%;
+        opacity: 1;
+    }
+
+    .field input:focus {
+        border-color: var(--violet);
+    }
+</style>
+
+<style>
+    /* The switch - the box around the slider */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked+.slider {
+        background-color: #2196F3;
+    }
+
+    input:focus+.slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+</style>
+
+<script>
+    var $ = {
+        get: function (selector) {
+            var ele = document.querySelectorAll(selector);
+            for (var i = 0; i < ele.length; i++) {
+                this.init(ele[i]);
+            }
+            return ele;
+        },
+        template: function (html) {
+            var template = document.createElement('div');
+            template.innerHTML = html.trim();
+            return this.init(template.childNodes[0]);
+        },
+        init: function (ele) {
+            ele.on = function (event, func) {
+                this.addEventListener(event, func);
+            }
+            return ele;
+        }
+    };
+
+    //Build the plugin
+    var drop = function (info) {
+        var o = {
+            options: info.options,
+            selected: info.selected || [],
+            preselected: info.preselected || [],
+            open: false,
+            html: {
+                select: $.get(info.selector)[0],
+                options: $.get(info.selector + ' option'),
+                parent: undefined,
+            },
+            init: function () {
+                //Setup Drop HTML
+                this.html.parent = $.get(info.selector)[0].parentNode
+                this.html.drop = $.template('<div class="drop"></div>')
+                this.html.dropDisplay = $.template('<div class="drop-display">Display</div>')
+                this.html.dropOptions = $.template('<div class="drop-options">Options</div>')
+                this.html.dropScreen = $.template('<div class="drop-screen"></div>')
+
+                this.html.parent.insertBefore(this.html.drop, this.html.select)
+                this.html.drop.appendChild(this.html.dropDisplay)
+                this.html.drop.appendChild(this.html.dropOptions)
+                this.html.drop.appendChild(this.html.dropScreen)
+                //Hide old select
+                this.html.drop.appendChild(this.html.select);
+
+                //Core Events
+                var that = this;
+                this.html.dropDisplay.on('click', function () {
+                    that.toggle()
+                });
+                this.html.dropScreen.on('click', function () {
+                    that.toggle()
+                });
+                //Run Render
+                this.load()
+                this.preselect()
+                this.render();
+            },
+            toggle: function () {
+                this.html.drop.classList.toggle('open');
+            },
+            addOption: function (e, element) {
+                var index = Number(element.dataset.index);
+                this.clearStates()
+                this.selected.push({
+                    index: Number(index),
+                    state: 'add',
+                    removed: false
+                })
+                this.options[index].state = 'remove';
+                this.render()
+                //get all selected values
+            },
+            removeOption: function (e, element) {
+                e.stopPropagation();
+                this.clearStates()
+                var index = Number(element.dataset.index);
+                this.selected.forEach(function (select) {
+                    if (select.index == index && !select.removed) {
+                        select.removed = true
+                        select.state = 'remove'
+                    }
+                })
+                this.options[index].state = 'add'
+                this.render();
+            },
+            load: function () {
+                this.options = [];
+                for (var i = 0; i < this.html.options.length; i++) {
+                    var option = this.html.options[i]
+                    this.options[i] = {
+                        html: option.innerHTML,
+                        value: option.value,
+                        selected: option.selected,
+                        state: ''
+                    }
+                }
+            },
+            preselect: function () {
+                var that = this;
+                this.selected = [];
+                this.preselected.forEach(function (pre) {
+                    that.selected.push({
+                        index: pre,
+                        state: 'add',
+                        removed: false
+                    })
+                    that.options[pre].state = 'remove';
+                })
+            },
+            render: function () {
+                this.renderDrop()
+                this.renderOptions()
+            },
+            renderDrop: function () {
+                var that = this;
+                var parentHTML = $.template('<div></div>')
+                this.selected.forEach(function (select, index) {
+                    var option = that.options[select.index];
+                    var childHTML = $.template('<span class="item ' + select.state + '">' + option
+                        .html + '</span>')
+                    var childCloseHTML = $.template(
+                        '<i class="material-icons btnclose" data-index="' + select.index +
+                        '">&#xe5c9;</i></span>')
+                    childCloseHTML.on('click', function (e) {
+                        that.removeOption(e, this)
+                    })
+                    childHTML.appendChild(childCloseHTML)
+                    parentHTML.appendChild(childHTML)
+                })
+                this.html.dropDisplay.innerHTML = '';
+                this.html.dropDisplay.appendChild(parentHTML)
+            },
+            renderOptions: function () {
+                var that = this;
+                var parentHTML = $.template('<div></div>')
+                this.options.forEach(function (option, index) {
+                    var childHTML = $.template(
+                        '<a data-index="' + index + '" class="' + option.state + '">' + option
+                        .html + '</a>')
+                    childHTML.on('click', function (e) {
+                        that.addOption(e, this)
+                    })
+                    parentHTML.appendChild(childHTML)
+                })
+                this.html.dropOptions.innerHTML = '';
+                this.html.dropOptions.appendChild(parentHTML)
+            },
+            clearStates: function () {
+                var that = this;
+                this.selected.forEach(function (select, index) {
+                    select.state = that.changeState(select.state)
+                })
+                this.options.forEach(function (option) {
+                    option.state = that.changeState(option.state)
+                })
+            },
+            changeState: function (state) {
+                switch (state) {
+                    case 'remove':
+                        return 'hide'
+                    case 'hide':
+                        return 'hide'
+                    default:
+                        return ''
+                }
+            },
+            isSelected: function (index) {
+                var check = false
+                this.selected.forEach(function (select) {
+                    if (select.index == index && select.removed == false) check = true
+                })
+                return check
+            }
+        };
+        o.init();
+        return o;
+    }
+
+    var myDrop = new drop({
+        selector: '#myMulti',
+        preselected: []
+    });
+
+    myDrop.toggle();
+</script>
+
+<script>
+    var notyf = new Notyf();
+
+    //if toggled show password field
+    document.getElementById("privatetoggle").addEventListener("click", function () {
+        if (document.getElementById("privatetoggle").checked) {
+            document.getElementById("password").hidden = false;
+            document.getElementById("password-label").hidden = false;
+        } else {
+            document.getElementById("password").hidden = true;
+            document.getElementById("password-label").hidden = true;
+        }
+    });
+
+    //submit formm
+    function newroomSub() {
+        var selected = myDrop.selected.map(function (select) {
+            return myDrop.options[select.index].value
+        })
+        console.log(selected)
+        let name = document.getElementById("name").value;
+        let password = document.getElementById("password").value;
+        let private = document.getElementById("privatetoggle").checked;
+        if (selected.length == 0) {
+            notyf.error("Please select at least one user")
+            return
+        }
+        if (name == "") {
+            notyf.error("Please enter a name")
+            return
+        }
+        if (private && password == "") {
+            notyf.error("Please enter a password")
+            return
+        }
+
+        let data = {
+            name: name,
+            password: password,
+            private: private,
+            playlist: selected
+        };
+        fetch("/room/newroom", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        }).then(async function (response) {
+            var res = await response.json();
+            console.log(res);
+            if (res.roomId) {
+                window.location.href = "/room/" + res.roomId;
+            }
+        });
+    };
+</script>
+
+<style>
+    body section {
+        margin-bottom: 10px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #cdcdcd;
+        min-height: 330px;
+        height: 400px;
+        padding: 20px 20px;
+    }
+
+    .drop {
+        position: relative;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .drop.open {
+        z-index: 100;
+    }
+
+    .drop.open .drop-screen {
+        z-index: 100;
+        display: block;
+    }
+
+    .drop.open .drop-options {
+        z-index: 200;
+        max-height: 200px;
+    }
+
+    .drop.open .drop-display {
+        z-index: 200;
+        border-color: #465;
+    }
+
+    .drop select {
+        display: none;
+    }
+
+    .drop .drop-screen {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        top: 0px;
+        left: 0px;
+        opacity: 0;
+        display: none;
+        z-index: 1;
+    }
+
+    .link {
+        text-align: center;
+        margin: 20px 0px;
+        color: #8CACD7;
+    }
+
+
+    .drop .drop-display {
+        position: relative;
+        padding: 0px 20px 5px 5px;
+        border: 4px solid #444;
+        width: 100%;
+        background: #FFF;
+        z-index: 1;
+        margin: 0px;
+        font-size: 16px;
+        min-height: 58px;
+    }
+
+    .drop .drop-display:hover:after {
+        opacity: 0.75;
+    }
+
+    .drop .drop-display:after {
+        font-family: 'Material Icons';
+        content: "\e5c6";
+        position: absolute;
+        right: 10px;
+        top: 12px;
+        font-size: 24px;
+        color: #444;
+    }
+
+    .drop .drop-display .item {
+        position: relative;
+        display: inline-block;
+        border: 2px solid #333;
+        margin: 5px 5px -4px 0px;
+        padding: 0px 25px 0px 10px;
+        overflow: hidden;
+        height: 40px;
+        line-height: 36px;
+    }
+
+    .drop .drop-display .item .btnclose {
+        color: #444;
+        position: absolute;
+        font-size: 16px;
+        right: 5px;
+        top: 10px;
+        cursor: pointer;
+    }
+
+    .drop .drop-display .item .btnclose:hover {
+        opacity: 0.75;
+    }
+
+    .drop .drop-display .item.remove {
+        -webkit-animation: removeSelected 0.2s, hide 1s infinite;
+        animation: removeSelected 0.2s, hide 1s infinite;
+        -webkit-animation-delay: 0s, 0.2s;
+        animation-delay: 0s, 0.2s;
+    }
+
+    .drop .drop-display .item.add {
+        -webkit-animation: addSelected 0.2s;
+        animation: addSelected 0.2s;
+    }
+
+    .drop .drop-display .item.hide {
+        display: none;
+    }
+
+    .drop .drop-options {
+        background: #444;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+        position: absolute;
+        width: 100%;
+        max-height: 0px;
+        overflow-y: auto;
+        transition: all 0.25s linear;
+        z-index: 1;
+    }
+
+    .drop .drop-options a {
+        display: block;
+        height: 40px;
+        line-height: 40px;
+        padding: 0px 20px;
+        color: white;
+        position: relative;
+        max-height: 40px;
+        transition: all 1s;
+        overflow: hidden;
+    }
+
+    .drop .drop-options a:hover {
+        background: #465;
+        cursor: pointer;
+    }
+
+    .drop .drop-options a.remove {
+        -webkit-animation: removeOption 0.2s;
+        animation: removeOption 0.2s;
+        max-height: 0px;
+    }
+
+    .drop .drop-options a.add {
+        -webkit-animation: addOption 0.2s;
+        animation: addOption 0.2s;
+    }
+
+    .drop .drop-options a.hide {
+        display: none;
+    }
+
+    @-webkit-keyframes pop {
+        from {
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+
+        to {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+    }
+
+    @keyframes pop {
+        from {
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+
+        to {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+    }
+
+    @-webkit-keyframes removeOption {
+        from {
+            max-height: 40px;
+        }
+
+        to {
+            max-height: 0px;
+        }
+    }
+
+    @keyframes removeOption {
+        from {
+            max-height: 40px;
+        }
+
+        to {
+            max-height: 0px;
+        }
+    }
+
+    @-webkit-keyframes addOption {
+        from {
+            max-height: 0px;
+        }
+
+        to {
+            max-height: 40px;
+        }
+    }
+
+    @keyframes addOption {
+        from {
+            max-height: 0px;
+        }
+
+        to {
+            max-height: 40px;
+        }
+    }
+
+    @-webkit-keyframes removeSelected {
+        from {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+
+        to {
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+    }
+
+    @keyframes removeSelected {
+        from {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+
+        to {
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+    }
+
+    @-webkit-keyframes addSelected {
+        from {
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+
+        to {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+    }
+
+    @keyframes addSelected {
+        from {
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+
+        to {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+    }
+
+    @-webkit-keyframes hide {
+
+        from,
+        to {
+            max-height: 0px;
+            max-width: 0px;
+            padding: 0px;
+            margin: 0px;
+            border-width: 0px;
+        }
+    }
+
+    @keyframes hide {
+
+        from,
+        to {
+            max-height: 0px;
+            max-width: 0px;
+            padding: 0px;
+            margin: 0px;
+            border-width: 0px;
+        }
+    }
+</style>

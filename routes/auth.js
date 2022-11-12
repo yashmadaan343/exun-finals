@@ -80,7 +80,7 @@ router.post('/login', async (req, res, next) => {
       req.logIn(user, (err) => {
         console.log(user);
         if (err) throw err;
-        res.send({ "msg": "Successfully Authenticated", "success": true });
+        res.redirect('/dashboard');
       });
     }
   })(req, res, next);
