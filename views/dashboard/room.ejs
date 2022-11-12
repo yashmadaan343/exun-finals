@@ -29,8 +29,9 @@
         navigator.msGetUserMedia);
 
     const myPeer = new Peer("<%= user.id %>", {
-        host: '/',
-        port: '3001'
+        secure: true,
+        host: 'exunpeer.herokuapp.com',
+        port: 443
     })
     myPeer.on('open', id => {
         socket.emit('join-room', '<%= roomid %>', id)
