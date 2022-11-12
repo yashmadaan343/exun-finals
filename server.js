@@ -18,7 +18,8 @@ const landing = require('./routes/landing')
 const auth = require('./routes/auth')
 const admin = require('./routes/admin')
 const room = require('./routes/room')
-const song = require('./routes/song')
+const song = require('./routes/song');
+const roomSchema = require("./schemas/roomSchema.js");
 
 if (process.env.NODE_ENV === 'production') {
     app.enable('trust proxy');
@@ -88,6 +89,9 @@ server.listen(PORT, () => console.log(`Connected on port ${PORT}`))
 //socket.io
 io.on('connection', socket => {
     socket.on('join-room', (roomId, userId) => {
+        roomSchema.updateOne({ id: roomId }, { $push: { users: userId } }, (err, room) => {
+            if (err) throw err;
+        })
         console.log("user connected", roomId, userId)
         socket.join(roomId)
         socket.to(roomId).emit('user-connected', userId)
@@ -95,6 +99,9 @@ io.on('connection', socket => {
         socket.on('disconnect', () => {
             socket.to(roomId).emit('user-disconnected', userId)
             console.log("User Disconnected", roomId, userId)
+            roomSchema.updateOne({ id: roomId }, { $pull: { users: userId } }, (err, room) => {
+                if (err) throw err;
+            })
         })
     })
 })
