@@ -6,14 +6,18 @@
         <div class="music">
             <div class="playlist">
                 <% for (i in JSON.parse(songs)){ %>
-                <div class="upnext song" id="<%= JSON.parse(songs)[i]._id %>">
-                    <img src="<%= JSON.parse(songs)[i].album_img %>" alt="" class="song-image">
-                    <div class="details">
-                        <div class="song-name"><%= JSON.parse(songs)[i].name %></div>
-                        <div class="artist-name"><%= JSON.parse(songs)[i].artist %></div>
+                    <div class="upnext song" id="<%= JSON.parse(songs)[i]._id %>">
+                        <img src="<%= JSON.parse(songs)[i].album_img %>" alt="" class="song-image">
+                        <div class="details">
+                            <div class="song-name">
+                                <%= JSON.parse(songs)[i].name %>
+                            </div>
+                            <div class="artist-name">
+                                <%= JSON.parse(songs)[i].artist %>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <% } %>
+                    <% } %>
             </div>
 
             <div class="controls">
@@ -64,7 +68,7 @@
 <script src="https://unpkg.com/peerjs@1.1.0/dist/peerjs.min.js"></script>
 <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"
     integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi" crossorigin="anonymous">
-</script>
+    </script>
 
 <style>
     .room {
@@ -208,12 +212,12 @@
         background: var(--text);
         border: none;
         outline: none;
-        border-radius: 3px;
+        border-radius: 5px;
     }
 
     .controls input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none !important;
-        border-radius: 3px;
+        border-radius: 5px;
         width: 10px;
         height: 10px;
         background: var(--violet);
@@ -234,6 +238,15 @@
 
     .control-buttons {
         margin: 20px 10px;
+    }
+
+    audio {
+        display: absolute;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
     }
 </style>
 
@@ -302,4 +315,4 @@
         })
         videoGrid.append(video)
     }
-</script> 
+</script>
