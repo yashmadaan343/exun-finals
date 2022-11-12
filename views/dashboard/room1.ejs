@@ -1,6 +1,6 @@
 <div class="room">
     <h1>
-        Room: <%= roomid %>
+        Room: <%= roomname %>
     </h1>
     <div class="room-container">
         <div class="music">
@@ -139,11 +139,11 @@
 
     .playlist {
         background-color: var(--overlay-grey);
-        padding: 30px;
+        padding: 20px 30px;
         border-radius: 20px;
         margin: 0 40px;
         overflow-y: scroll;
-        height: 40vh;
+        height: 50vh;
     }
 
     .playlist .song-image {
@@ -161,6 +161,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        margin: 10px 0px;
     }
 
     .upnext .details {
@@ -213,6 +214,7 @@
         border: none;
         outline: none;
         border-radius: 5px;
+        margin: 15px 5px;
     }
 
     .controls input[type="range"]::-webkit-slider-thumb {
@@ -256,6 +258,9 @@
 </script>
 
 <script>
+    window.onload = () =>{
+        document.getElementById('vol').innerText = document.getElementsByClassName('slider')[0].value
+    }
     var socket = io('<%= socketurl %>');
     const videoGrid = document.getElementById('video-grid')
     navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
