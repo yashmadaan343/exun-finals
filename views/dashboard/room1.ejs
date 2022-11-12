@@ -1,0 +1,211 @@
+<div class="room">
+    <h1>
+        Room: ik
+    </h1>
+    <div class="room-container">
+        <div class="music">
+            <div class="playlist">
+                <div class="current song">
+                    <img src="/bang.png" alt="">
+                    <div class="song-controls">
+                        <div class="prev"></div>
+                        <div class="details">
+                            <div class="song-name">Bury Me Face Down</div>
+                            <div class="artist-name">grandson</div>
+                        </div>
+                        <div class="next"></div>
+                    </div>
+                </div>
+                <div class="upnext song">
+                    <img src="/bang.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div id="video-grid">
+            <div class="participant">
+                <h4 class="participant-name">Aayush Garg</h4>
+                <video></video>
+            </div>
+            <div class="participant">
+                <h4 class="participant-name">Aayush Garg</h4>
+                <video></video>
+            </div>
+            <div class="participant" style="outline: 3px solid var(--violet)">
+                <h4 class="participant-name">Aayush Garg</h4>
+                <video></video>
+            </div>
+            <div class="participant">
+                <h4 class="participant-name">Aayush Garg</h4>
+                <video></video>
+            </div>
+            <div class="participant">
+                <h4 class="participant-name">Aayush Garg</h4>
+                <video></video>
+            </div>
+            <div class="participant">
+                <h4 class="participant-name">Aayush Garg</h4>
+                <video></video>
+            </div>
+            <div class="participant">
+                <h4 class="participant-name">Aayush Garg</h4>
+                <video></video>
+            </div>
+            <div class="participant">
+                <h4 class="participant-name">Aayush Garg</h4>
+                <video></video>
+            </div>
+            <div class="participant">
+                <h4 class="participant-name">Aayush Garg</h4>
+                <video></video>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/peerjs@1.1.0/dist/peerjs.min.js"></script>
+<script src="https://cdn.socket.io/4.5.3/socket.io.min.js"
+    integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi" crossorigin="anonymous">
+    </script>
+
+<style>
+    .room {
+        background-color: var(--black);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+    }
+
+    .room h1 {
+        color: var(--violet);
+        text-align: center;
+        padding: 20px;
+    }
+
+    .room-container {
+        width: 100vw;
+        display: flex;
+        flex-direction: row;
+    }
+
+
+    #video-grid {
+        width: 70vw;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 200px);
+        grid-auto-rows: 250px;
+    }
+
+    video {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        margin: 10px;
+        background-color: var(--grey);
+    }
+
+    .participant {
+        margin: 30px;
+        background-color: var(--overlay-grey);
+        width: 170px;
+        height: 220px;
+        border-radius: 10px;
+    }
+
+    .participant-name {
+        margin: 15px 5px;
+    }
+
+    .music {
+        width: 30vw;
+        height: 100vh;
+    }
+
+    .playlist {
+        background-color: var(--overlay-grey);
+        padding: 50px;
+        border-radius: 20px;
+        margin: 0 40px;
+    }
+
+    .playlist img {
+        width: 60px;
+        height: 60px;
+        border-radius: 20px;
+    }
+
+    .upnext {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--text);
+    }
+
+    .song {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+</style>
+
+
+<script>
+    var socket = io('<%= socketurl %>');
+    const videoGrid = document.getElementById('video-grid')
+    navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia);
+
+    const myPeer = new Peer("<%= user.id %>", {
+        secure: true,
+        host: 'exunpeer.herokuapp.com',
+        port: 443
+    })
+    myPeer.on('open', id => {
+        socket.emit('join-room', '<%= roomid %>', id)
+    })
+
+    const myVideo = document.createElement('video')
+    const peers = {}
+    navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: false
+    }).then(stream => {
+        myPeer.on('call', call => {
+            call.answer(stream)
+            const video = document.createElement('video')
+            call.on('stream', userVideoStream => {
+                addVideoStream(video, userVideoStream)
+            })
+        })
+
+        socket.on('user-connected', userId => {
+            connectToNewUser(userId, stream)
+        })
+    })
+
+    socket.on('user-disconnected', userId => {
+        if (peers[userId]) peers[userId].close()
+    })
+
+    myPeer.on('open', id => {
+        socket.emit('join-room', "<%= roomid %>", id)
+    })
+
+    function connectToNewUser(userId, stream) {
+        const call = myPeer.call(userId, stream)
+        const video = document.createElement('video')
+        call.on('stream', userVideoStream => {
+            addVideoStream(video, userVideoStream)
+        })
+        call.on('close', () => {
+            video.remove()
+        })
+
+        peers[userId] = call
+    }
+
+    function addVideoStream(video, stream) {
+        video.srcObject = stream
+        video.addEventListener('loadedmetadata', () => {
+            video.play()
+        })
+        videoGrid.append(video)
+    }
+</script>
