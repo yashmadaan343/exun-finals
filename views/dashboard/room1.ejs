@@ -5,26 +5,12 @@
     <div class="room-container">
         <div class="music">
             <div class="playlist">
-                <div class="current song">
-                    <img src="/bang.png" alt="" class="song-image">
-                    <div class="song-controls">
-                        <div class="about">
-                            <div class="prev"><img src="/prev.svg" alt=""></div>
-                            <div class="details">
-                                <div class="song-name" id="current-song-name">Bury Me Face Down</div>
-                                <div class="artist-name" id="current-song-artist">grandson</div>
-                            </div>
-                            <div class="next"><img src="/next.svg" alt=""></div>
-                        </div>
-                        <div class="song-timeline"></div>
-                    </div>
-                </div>
-                <% for (i in songs){ %>
-                <div class="upnext song">
-                    <img src="<%= songs[i].album_img %>" alt="" class="song-image">
+                <% for (i in JSON.parse(songs)){ %>
+                <div class="upnext song" id="<%= JSON.parse(songs)[i]._id %>">
+                    <img src="<%= JSON.parse(songs)[i].album_img %>" alt="" class="song-image">
                     <div class="details">
-                        <div class="song-name"><%= songs[i].name %></div>
-                        <div class="artist-name"><%= songs[i].artist %></div>
+                        <div class="song-name"><%= JSON.parse(songs)[i].name %></div>
+                        <div class="artist-name"><%= JSON.parse(songs)[i].artist %></div>
                     </div>
                 </div>
                 <% } %>
@@ -69,45 +55,11 @@
                 </div>
                 <video></video>
             </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                </div>
-                <video></video>
-            </div>
-
         </div>
     </div>
+    <audio controls>
+        <source autoplay src="/song/play/Apocalypse" type="audio/mpeg">
+    </audio>
 </div>
 <script src="https://unpkg.com/peerjs@1.1.0/dist/peerjs.min.js"></script>
 <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"
@@ -186,6 +138,8 @@
         padding: 30px;
         border-radius: 20px;
         margin: 0 40px;
+        overflow-y: scroll;
+        height: 40vh;
     }
 
     .playlist .song-image {
@@ -284,10 +238,11 @@
 </style>
 
 <script>
-    var songs = "<%= songs %>"
+    var songs = JSON.parse(JSON.stringify(<%- songs %>))
+    console.log(songs)
 </script>
 
-<!-- <script>
+<script>
     var socket = io('<%= socketurl %>');
     const videoGrid = document.getElementById('video-grid')
     navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
@@ -304,6 +259,7 @@
     })
 
     const myVideo = document.createElement('video')
+    myVideo.muted = true // add a unmute button later
     const peers = {}
     navigator.mediaDevices.getUserMedia({
         audio: true,
@@ -346,4 +302,4 @@
         })
         videoGrid.append(video)
     }
-</script> -->
+</script> 

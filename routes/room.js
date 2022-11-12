@@ -49,7 +49,9 @@ router.get('/:id', ensureAuthenticated, async (req, res) => {
         console.log(room);
         var songs = await room.playlist.map(async song => await songSchema.findOne({_id: song}));
         songs = await Promise.all(songs);
-        console.log(songs);
+        songs = await songs.map(song => song.toObject());
+        songs = await Promise.all(songs);
+        songs = JSON.stringify(songs);
         if (room) {
             res.render('dashboard/room1', { roomid: req.params.id, user: req.user, socketurl: process.env.SOCKET_URL, songs:await songs });
         }

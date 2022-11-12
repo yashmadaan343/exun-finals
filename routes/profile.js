@@ -7,7 +7,7 @@ const SpotifyWebApi = require('spotify-web-api-node')
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-    redirectUri: process.env.APP_BASE_URL + '/profile/spotify-callback/'
+    redirectUri: process.env.APP_BASE_URL + 'profile/spotify-callback/'
 })
 
 const token = 'BQAqrIIFhe7hiiy1zo0Y0fcNUUrnHiYxG-PFqcGDtVHIflEYqYMi8hImGmAvMr4WZe2-OHEkfryXLfKBuxyHhz77fvm89e0ccyZUcF7a9WtxAlrj7Kt-tRHgdMqPl4CAh3rfUIIOquAL0HwrkYySWbprAU1bo-04n-5b7Iuzc0prPUDnBooMU2W8VDAWlMPpgE6RFRwhaRFIlg'
@@ -22,6 +22,7 @@ router.get('/connect-spotify', async(req, res, next)=>{
 
 router.get('/spotify-callback', (req, res, next)=>{
     const code = req.query.code
+    console.log(code)
     spotifyApi.authorizationCodeGrant(code).then(
         async function(data) {
             await User.findOneAndUpdate({id:req.user.id}, {access_token:data.body['access_token']})
