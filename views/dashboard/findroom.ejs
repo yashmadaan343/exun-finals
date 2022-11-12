@@ -1,0 +1,9 @@
+<h1>Find Rooms</h1>
+
+<% rooms.forEach((room)=>{%>
+    <div>
+        <h3><%=room.name%></h3>
+        Users: <%=room.users.length%> 
+        <a href="/room/<%=room.id%> ">Join</a>
+    </div>
+<% }) %> 
