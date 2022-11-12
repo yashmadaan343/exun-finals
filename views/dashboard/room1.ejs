@@ -6,17 +6,17 @@
         <div class="music">
             <div class="playlist">
                 <% for (i in JSON.parse(songs)){ %>
-                    <div class="upnext song" id="<%= JSON.parse(songs)[i]._id %>">
-                        <img src="<%= JSON.parse(songs)[i].album_img %>" alt="" class="song-image">
-                        <div class="details">
-                            <div class="song-name">
-                                <%= JSON.parse(songs)[i].name %>
-                            </div>
-                            <div class="artist-name">
-                                <%= JSON.parse(songs)[i].artist %>
-                            </div>
+                <div class="upnext song" id="<%= JSON.parse(songs)[i]._id %>">
+                    <img src="<%= JSON.parse(songs)[i].album_img %>" alt="" class="song-image">
+                    <div class="details">
+                        <div class="song-name">
+                            <%= JSON.parse(songs)[i].name %>
+                        </div>
+                        <div class="artist-name">
+                            <%= JSON.parse(songs)[i].artist %>
                         </div>
                     </div>
+                </div>
                 <% } %>
             </div>
 
@@ -26,36 +26,16 @@
                     oninput="document.getElementById('vol').innerText = this.value">
                 <p id="vol">0</p>
                 <div class="control-buttons">
-                    <button>Request Owner</button>
-                    <button>Suggest Song</button>
+                    <button id="mute" onclick="UnMute()">Unmute</button>
+                    <button id="suggestSong" onclick="future()">Suggest Song</button>
                 </div>
             </div>
         </div>
         <div id="video-grid">
             <div class="participant">
                 <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
+                    <h4 class="participant-name"><%= user.name %></h4>
                     <div class="mic"><img src="/mute.svg" alt=""></div>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                    <div class="mic"><img src="/mute.svg" alt=""></div>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant" style="outline: 3px solid var(--violet)">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
-                    <div class="mic"><img src="/unmute.svg" alt=""></div>
-                </div>
-                <video></video>
-            </div>
-            <div class="participant">
-                <div class="participant-details">
-                    <h4 class="participant-name">Aayush Garg</h4>
                 </div>
                 <video></video>
             </div>
@@ -68,7 +48,7 @@
 <script src="https://unpkg.com/peerjs@1.1.0/dist/peerjs.min.js"></script>
 <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"
     integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi" crossorigin="anonymous">
-    </script>
+</script>
 
 <style>
     .room {
@@ -253,25 +233,40 @@
 </style>
 
 <script>
-    var songs = JSON.parse(JSON.stringify( <%-songs %> ))
+    var songs = JSON.parse(JSON.stringify( <%- songs %> ))
     console.log(songs)
     var audio = document.getElementById("AudioController");
     var currentSong = 0;
-    
+
     function playSong() {
-        audio.src = '/song/play'+songs[currentSong].name;
+        audio.src = '/song/play/' + songs[currentSong].name;
         audio.play();
-        audio.addEventListener("ended", function() {
+        audio.addEventListener("ended", function () {
             nextSong();
         });
     }
-    window.onload = function() {
+
+    window.addEventListener("load", function () {
+        playSong();
+    });
+
+    function nextSong() {
+        currentSong++;
+        if (currentSong >= songs.length) {
+            currentSong = 0;
+        }
         playSong();
     }
 </script>
 
 <script>
-    window.onload = () =>{
+    var notyf = new Notyf();
+    var stream; 
+    function future() {
+        notyf.error('This feature will be implemented in the future.');
+    }
+    var muted = true;
+    window.onload = () => {
         document.getElementById('vol').innerText = document.getElementsByClassName('slider')[0].value
     }
     var socket = io('<%= socketurl %>');
@@ -290,23 +285,29 @@
     })
 
     const myVideo = document.createElement('video')
-    myVideo.muted = true // add a unmute button later
+    myVideo.muted = true;
+
     const peers = {}
     navigator.mediaDevices.getUserMedia({
         audio: true,
         video: false
-    }).then(stream => {
-        myPeer.on('call', call => {
-            call.answer(stream)
-            const video = document.createElement('video')
-            call.on('stream', userVideoStream => {
-                addVideoStream(video, userVideoStream)
-            })
-        })
+    }).then(s=>{
+        stream = s;
+    })
 
-        socket.on('user-connected', userId => {
-            connectToNewUser(userId, stream)
+    myPeer.on('call', call => {
+        call.answer(stream)
+        const video = document.createElement('video')
+        call.on('stream', (userVideoStream) => {
+            addVideoStream(video, userVideoStream, call.peer)
         })
+        call.on('close', () => {
+            document.getElementById(call.peer).remove()
+        })
+    });
+
+    socket.on('user-connected', userId => {
+        connectToNewUser(userId, stream)
     })
 
     socket.on('user-disconnected', userId => {
@@ -317,20 +318,78 @@
         const call = myPeer.call(userId, stream)
         const video = document.createElement('video')
         call.on('stream', userVideoStream => {
-            addVideoStream(video, userVideoStream)
+            addVideoStream(video, userVideoStream, userId)
         })
         call.on('close', () => {
-            video.remove()
+            document.getElementById(userId).remove()
         })
 
         peers[userId] = call
     }
 
-    function addVideoStream(video, stream) {
+    async function addVideoStream(video, stream, userId) {
+        console.log(stream, video, userId)
         video.srcObject = stream
         video.addEventListener('loadedmetadata', () => {
             video.play()
         })
-        videoGrid.append(video)
+        var user = await fetch('/profile/' + userId).then(res => res.json())
+        var videoContainer =
+            `<div id='${userId}' class="participant"><div class="participant-details"><h4 class="participant-name">${user.user.name}</h4><div class="mic"><img src="/mute.svg" alt=""></div></div>${video.outerHTML}</div>`;
+        videoGrid.innerHTML += videoContainer
+    }
+
+    function UnMute() {
+        var button = document.getElementById('mute')
+        if (muted) {
+            muted = false;
+            button.innerHTML = 'Mute'
+            stream.getAudioTracks()[0].enabled = true;
+        } else {
+            muted = true;
+            button.innerHTML = 'Unmute'
+            stream.getAudioTracks()[0].enabled = false;
+        }
     }
 </script>
+
+<!-- <%= (room.author+ user._id) %> -->
+
+<% if (room.author == user._id){ %>
+<script>
+    //send socket io broadcast with current song and time every 5 seconds
+    setInterval(function () {
+        socket.emit('song', {
+            song: songs[currentSong].name,
+            time: audio.currentTime,
+            paused: audio.paused
+        });
+        if (audio.currentTime == audio.duration) {
+            nextSong();
+        }
+        console.log({
+            song: songs[currentSong].name,
+            time: audio.currentTime
+        })
+    }, 5000);
+</script>
+<% } else {%>
+<script>
+    var audio = document.getElementById("AudioController");
+    socket.on('song', function (data) {
+        console.log(data, audio.currentTime, audio.src, audio.currentTime < data.time + 2 || audio.currentTime >
+            data.time - 2)
+
+        audio.src = '/song/play/' + data.song;
+        audio.currentTime = data.time;
+        if (data.paused) {
+            audio.pause();
+        } else {
+            audio.play();
+        }
+        audio.addEventListener("ended", function () {
+            nextSong();
+        });
+    });
+</script>
+<% } %>

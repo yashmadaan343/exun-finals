@@ -68,4 +68,13 @@ router.post('/edit', ensureAuthenticated, async (req, res) => {
     }
 })
 
+router.get('/:id', async (req, res) => {
+    const user = await User.findOne({ _id: req.params.id })
+    if (user) {
+        res.send({ user })
+    } else {
+        res.send({ msg: "User not found" })
+    }
+})
+
 module.exports = router;
