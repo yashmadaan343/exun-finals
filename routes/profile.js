@@ -19,7 +19,7 @@ router.get('/connect-spotify', async(req, res, next)=>{
     ]))
 })
 
-router.get('/spotify-callback', (req, res, next) => {
+router.get('/spotify-callback/', (req, res, next) => {
     const code = req.query.code
     spotifyApi.authorizationCodeGrant(code).then(
         async function(data) {
