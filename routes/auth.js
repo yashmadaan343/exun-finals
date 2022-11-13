@@ -91,7 +91,7 @@ router.get('/user', (req, res) => {
 
 router.get('/logout', (req, res) => {
   req.logout();
-  res.send({ "msg": "Successfully logged out" });
+  res.redirect('/')
 })
 
 module.exports = router;
