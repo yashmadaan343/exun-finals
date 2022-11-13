@@ -45,7 +45,7 @@ router.post('/newroom', ensureAuthenticated, (req, res) => {
 
 router.get('/find', ensureAuthenticated, async (req, res)=> {
     const rooms = await roomSchema.find({private:false})
-    res.render('dashboard/findroom', {user:req.user, rooms})
+    res.render('dashboard/join', {user:req.user, rooms})
 })
 
 //join a audio room by :id
