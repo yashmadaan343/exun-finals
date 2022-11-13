@@ -153,9 +153,15 @@
     <div id="mobile__menu" class="overlay">
         <a class="close">&times;</a>
         <div class="overlay__content">
-            <a href="#">About</a>
-            <a href="#">XYZ</a>
-            <a href="#">XYZ</a>
+            <% if (user) { %>
+                <li><a href="/join">Join Room</a></li>
+                <li><a href="/room/newroom">Create Room</a></li>
+                <li><a href="/profile">View Profile</a></li>
+                <% } else { %>
+                    <li><a href="/auth/register">Register</a></li>
+                    <li><a href="/auth/login">Login</a></li>
+                    <li><a href="/">Home</a></li>
+                    <% } %>
         </div>
     </div>
     <script>
