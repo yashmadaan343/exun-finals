@@ -43,13 +43,13 @@ router.post('/newroom', ensureAuthenticated, (req, res) => {
     }).catch(err => console.log(err))
 })
 
-router.get('/find', ensureAuthenticated, async (req, res)=> {
+router.get('/join', ensureAuthenticated, async (req, res)=> {
     const rooms = await roomSchema.find({private:false})
     res.render('dashboard/join', {user:req.user, rooms})
 })
 
 //join a audio room by :id
-router.get('/:id', ensureAuthenticated, async (req, res) => {
+router.get('/join/:id', ensureAuthenticated, async (req, res) => {
     roomSchema.findOne({id: req.params.id}, async  (err, room) => {
         console.log(room);
         var songs = await room.playlist.map(async song => await songSchema.findOne({_id: song}));
@@ -58,7 +58,7 @@ router.get('/:id', ensureAuthenticated, async (req, res) => {
         songs = await Promise.all(songs);
         songs = JSON.stringify(songs);
         if (room) {
-            res.render('dashboard/room1', { roomid: req.params.id, user: req.user, socketurl: process.env.SOCKET_URL, songs:await songs, roomname: room.name});
+            res.render('dashboard/room1', {room, roomid: req.params.id, user: req.user, socketurl: process.env.SOCKET_URL, songs:await songs, roomname: room.name});
         }
         else {
             res.redirect('/room/newroom');

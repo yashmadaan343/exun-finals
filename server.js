@@ -111,5 +111,9 @@ io.on('connection', socket => {
                 if (err) throw err;
             })
         })
+        socket.on('song', (song) => {
+            console.log("song", song)
+            socket.to(roomId).emit('song', song)
+        })
     })
 })

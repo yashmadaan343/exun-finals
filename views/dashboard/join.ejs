@@ -12,12 +12,14 @@
                 <div class="room-name"><%=room.name%></div>
                 <div class="room-details">Users: <%=room.users.length%> </div>
 
-                <button><a href="/room/<%=room.id%> ">Join</a></button></div>
+                <button><a href="/room/join/<%=room.id%> ">Join</a></button></div>
         <% }) %> 
     </div>
 </div>
 
 <style>
+    a{text-decoration: none; color: var(--white)}
+    a:hover{text-decoration: none;}
     .join {
         background-color: var(--black);
         color: var(--text);
