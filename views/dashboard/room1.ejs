@@ -6,7 +6,7 @@
         <div class="music">
             <div class="playlist">
                 <% for (i in JSON.parse(songs)){ %>
-                <div class="upnext song" id="<%= JSON.parse(songs)[i].name %>">
+                <div class="upnext song" id="<%= JSON.parse(songs)[i].name %>" onclick="changeSong('<%= [i] %>')">
                     <img src="<%= JSON.parse(songs)[i].album_img %>" alt="" class="song-image">
                     <div class="details">
                         <div class="song-name">
@@ -229,7 +229,7 @@
 </style>
 
 <script>
-    var songs = JSON.parse(JSON.stringify( <%- songs %> ))
+    var songs = JSON.parse(JSON.stringify( <%-songs %> ))
     console.log(songs)
     var audio = document.getElementById("AudioController");
     var currentSong = 0;
@@ -240,16 +240,21 @@
         audio.addEventListener("ended", function () {
             nextSong();
         });
+        for (i in songs) {
+            if (i != currentSong) {
+                var song = document.getElementById(songs[i].name);
+                song.style.outline = "none";
+            }
+        }
 
         //give outline to current song
         var song = document.getElementById(songs[currentSong].name);
         song.style.outline = "2px solid var(--violet)";
-
-        //remove outline from previous song
-        if (currentSong > 0) {
-            var prevSong = document.getElementById(songs[currentSong - 1].name);
-            prevSong.style.outline = "none";
-        }
+        // //remove outline from previous song
+        // if (currentSong > 0) {
+        //     var prevSong = document.getElementById(songs[currentSong - 1].name);
+        //     prevSong.style.outline = "none";
+        // }
     }
 
     window.addEventListener("load", function () {
@@ -268,7 +273,8 @@
 <script>
     var muted = true;
     var notyf = new Notyf();
-    var stream; 
+    var stream;
+
     function future() {
         notyf.error('This feature will be implemented in the future.');
     }
@@ -294,7 +300,7 @@
     navigator.mediaDevices.getUserMedia({
         audio: true,
         video: false
-    }).then(s=>{
+    }).then(s => {
         stream = s;
     })
 
@@ -375,6 +381,11 @@
             time: audio.currentTime
         })
     }, 5000);
+
+    function changeSong(song) {
+        currentSong = (song);
+        playSong();
+    }
 </script>
 <% } else {%>
 <script>
