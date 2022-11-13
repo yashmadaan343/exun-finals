@@ -21,10 +21,6 @@
             </div>
 
             <div class="controls">
-                <h2>Volume</h2>
-                <input type="range" name="" class="slider" value="30" min="0" max="100"
-                    oninput="document.getElementById('vol').innerText = this.value">
-                <p id="vol">0</p>
                 <div class="control-buttons">
                     <button id="mute" onclick="UnMute()">Unmute</button>
                     <button id="suggestSong" onclick="future()">Suggest Song</button>
@@ -181,7 +177,7 @@
     }
 
     .controls {
-        padding: 30px;
+        padding: 10px 30px;
         background-color: var(--overlay-grey);
         border-radius: 20px;
         margin: 20px 40px;
@@ -264,10 +260,6 @@
     var stream; 
     function future() {
         notyf.error('This feature will be implemented in the future.');
-    }
-    var muted = true;
-    window.onload = () => {
-        document.getElementById('vol').innerText = document.getElementsByClassName('slider')[0].value
     }
     var socket = io('<%= socketurl %>');
     const videoGrid = document.getElementById('video-grid')
