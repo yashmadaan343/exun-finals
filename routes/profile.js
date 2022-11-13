@@ -29,7 +29,7 @@ router.get('/spotify-callback', (req, res, next) => {
             spotifyApi.setAccessToken(data.body['access_token']);
             spotifyApi.setRefreshToken(data.body['refresh_token']);
         }).then(() => {
-            res.render('index')
+            res.render('index', {user: req.user})
         })
 })
 

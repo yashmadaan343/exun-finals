@@ -9,7 +9,7 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            padding: 30px 10%;
+            padding: 15px 10%;
             background-color: var(--black);
             border-bottom: 1px solid var(--grey);
         }
@@ -137,12 +137,17 @@
         <a class="logo" href="#" style="text-decoration: none; color: var(--violet); font-family:Outfit; font-size: 1.5em"> Mise</a>
         <nav>
             <ul class="nav__links">
-                <li><a href="#">About</a></li>
-                <li><a href="#">XYZ</a></li>
-                <li><a href="#">XYZ</a></li>
+                <% if (user) { %>
+                <li><a href="/join">Join Room</a></li>
+                <li><a href="/room/newroom">Create Room</a></li>
+                <li><a href="/profile">View Profile</a></li>
+                <% } else { %>
+                    <li><a href="/auth/register">Register</a></li>
+                    <li><a href="/auth/login">Login</a></li>
+                    <li><a href="/">Home</a></li>
+                    <% } %>
             </ul>
         </nav>
-        <a class="cta" href="#">Button</a>
         <p class="menu cta">Menu</p>
     </header>
     <div id="mobile__menu" class="overlay">

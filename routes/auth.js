@@ -9,7 +9,7 @@ const User = require('../schemas/userSchema.js'),
 
 //register
 router.get('/register', forwardAuthenticated, (req, res) => {
-  res.render('auth/register')
+  res.render('auth/register', {user: req.user})
 })
 
 
@@ -50,7 +50,7 @@ router.post('/register', async (req, res) => {
               else {
                 req.logIn(user, (err) => {
                   if (err) throw err;
-                  res.render('auth/login', { msg: "Successfully Authenticated", success: "true" });
+                  res.render('auth/login', { msg: "Successfully Authenticated", success: "true", user: req.user });
                 });
               }
             })(req, res);
@@ -67,7 +67,7 @@ router.post('/register', async (req, res) => {
 //login 
 
 router.get('/login', forwardAuthenticated, (req, res) => {
-  res.render('auth/login')
+  res.render('auth/login', {user: req.user})
 })
 
 router.post('/login', async (req, res, next) => {

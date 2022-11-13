@@ -7,7 +7,7 @@ const router = require('express').Router();
 
 router.get('/newroom', ensureAuthenticated, async (req, res) => {
     var songs = await songSchema.find({}).sort({ songName: 1 });
-    res.render('dashboard/newroom', { songs: songs });
+    res.render('dashboard/newroom', { songs: songs, user: req.user});
 })
 
 router.post('/newroom', ensureAuthenticated, (req, res) => {
