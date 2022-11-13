@@ -1,25 +1,193 @@
+<div class="reg-container">
+<div class="reg-form-container">
 <form action="/profile/edit" method="post">
-    <input type="text" name="name" id="name" value="<%=user.name%>" required> <br>
-    <input type="text" name="email" id="email" value="<%=user.email%>" required> <br>
-    <img src="<%=user.pfp%> " alt=""> <br>
-    <input type="text" name="pfp" id="pfp" value="<%=user.pfp%>" required><br>
-    <button type="submit">Save edited profile</button><br>
+    <h1>Profile</h1>
+    <img src="<%=user.pfp%> " alt="" class="pfp">
+    <div class="field">
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" value="<%=user.name%>" required> 
+    </div>
+    <div class="field">
+    <label for="email">Email</label>
+    <input type="text" name="email" id="email" value="<%=user.email%>" required> <br></div>
+    <div class="field">
+    <label for="pfp">Profile Picture</label>
+    <input type="text" name="pfp" id="pfp" value="<%=user.pfp%>" class="pfp-field" required> </div>
+    <button type="submit" class="reg-submit">Save profile</button><br>
 </form>
-
+</div>
+</div>
+<hr>
+<div class="spotify">
 <% if(name!==" "){%> 
-    Now playing: <%= name %> <br>
-    By: <%= artist %> <br>
-    <img src="<%=image%> " alt=""><br>
+    <div class="wrapper">
+    <h2> <span>Now playing: </span><%= name %> </h2>
+    <h3> <span> By: </span><%= artist %> </h3>
+    <img src="<%=image%> " alt="" class="album_img"></div>
 <%} %> 
 
-<a href="/profile/connect-spotify">Connect Spotify</a><br>
-
+<% if(connect) {%>
+ <button class="connect"><a href="/profile/connect-spotify">Connect Spotify</a><br></button> 
+<% } %> 
+</div>
 
 <style>
-    img{
+    span{
+        font-weight: 300;
+        color: white;
+    }
+    h2{
+        color: var(--violet);
+        padding-top: 20px;
+    }
+    h3{
+        padding-top: 30px;
+        padding-bottom: 30px;
+        color:var(--violet);
+    }
+    hr { 
+  height: 30px; 
+  border-style: solid; 
+  border-color: #8c8b8b; 
+  border-width: 1px 0 0 0; 
+  border-radius: 20px; 
+} 
+hr:before { 
+  display: block; 
+  content: ""; 
+  height: 30px; 
+  margin-top: -31px; 
+  border-style: solid; 
+  border-color: #8c8b8b; 
+  border-width: 0 0 1px 0; 
+  border-radius: 20px; 
+}
+    html{
+        overflow-x: hidden;
+    }
+    .wrapper{
+        align-items: center;
+        text-align: center;
+        background: var(--black)
+    }
+
+    .album_img{
+        height:200px;
+        width:200px;
+        margin-bottom: 20px;
+    }
+
+    .pfp{
+        border-radius:50%;
         padding-bottom: 20px;
         padding-top: 20px;
         height:200px;
         width:200px;
     }
+    body{
+        background-color: --black;
+    }
+    .reg-submit {
+        background-color: var(--violet);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 24px;
+        border-radius: 10px;
+        margin: 40px 2px 4px;
+        cursor: pointer;
+        width: 200px;
+    }
+    a{text-decoration: none;color: #000;}
+    a:hover{text-decoration: none;color: #000;}
+    .connect{
+        font-weight: 600;
+        background-color: #16e16e;
+        border: none;
+        color: black;
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 24px;
+        border-radius: 10px;
+        margin: 40px 2px 4px;
+        cursor: pointer;
+        width: 240px;
+        margin-bottom: 30px;
+    }
+    .reg-container {
+        background-color: var(--black);
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        min-height: 100vh;
+        min-width: 100vw;
+    }
+
+    .reg-form-container {
+        padding: 1rem;
+        border-radius: 1rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: left;
+    }
+
+    .reg-form-container form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+    }
+
+    .reg-form-container label {
+        color: var(--grey);
+        font-size: 14px;
+        margin-bottom: 0.8rem;
+    }
+    
+    .reg-form-container h1 {
+        color: var(--violet);
+        text-align: center;
+        font-size: 52px;
+        font-weight: 400;
+        margin-bottom: 20px;
+    }
+    
+    .field {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .field input {
+        transition: border-color 0.3s ease-out;
+        font-size: 16px;
+        padding: 0.8rem 1rem;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        color: var(--white);
+        outline: 0;
+        border-width: 0 0 2px;
+        width: 30vw;
+        border: 2px solid var(--text);
+        outline: none;
+        border-radius: 15px;
+    }
+
+    ::placeholder {
+        opacity: 60%;
+    }
+
+    [placeholder]:focus::-webkit-input-placeholder {
+        transition: text-indent 0.4s 0.4s ease;
+        text-indent: -100%;
+        opacity: 1;
+    }
+    
+    .field input:focus{
+        border-color: var(--violet);
+    }
 </style>
+

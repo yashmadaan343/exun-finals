@@ -7,19 +7,19 @@
         </form>
     </div>
     <div class="rooms">
-        
-        <div class="room">
-            <div class="room-name">Room 1</div>
-            <div class="room-details">
-                <p style="opacity: 70%;">Started by: Aayush Garg</p>
-                <p>10 participants</p>
-            </div>
-            <button>Join Room</button>
-        </div>
+        <% rooms.forEach((room)=>{%>
+            <div class="room">
+                <div class="room-name"><%=room.name%></div>
+                <div class="room-details">Users: <%=room.users.length%> </div>
+
+                <button><a href="/room/join/<%=room.id%> ">Join</a></button></div>
+        <% }) %> 
     </div>
 </div>
 
 <style>
+    a{text-decoration: none; color: var(--white)}
+    a:hover{text-decoration: none;}
     .join {
         background-color: var(--black);
         color: var(--text);

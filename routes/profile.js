@@ -44,24 +44,24 @@ router.get('/', ensureAuthenticated, async (req, res) => {
                 const name = song.name
                 const artist = song.artists[0].name
                 const image = await song.album.images[0].url
-                res.render('profile', {user: req.user, name, artist, image})
+                res.render('profile', {user: req.user, name, artist, image, connect:false})
             }else{
-                res.render('profile', {user: req.user, name: " "}) 
+                res.render('profile', {user: req.user, name: " ", connect:false}) 
             }
         }, function(err) {
             console.log('Something went wrong!', err);
         });    
     }else{
-        res.render('profile', {user: req.user, name: " "})
+        res.render('profile', {user: req.user, name: " ", connect:true})
     }
 })
 
 router.post('/edit', ensureAuthenticated, async (req, res) => {
-    const { name, email, pfp } = req.body
-    if (!name || !email) res.send({ "msg": "Please fill out all fields" })
-    else {
-        await User.findOneAndUpdate({ id: req.user.id }, { name, email, pfp }).then((user) => {
-            res.send({ success: true, msg: "Profile updated" })
+    const {name, email, pfp} = req.body
+    if(!name || !email) res.send({"msg": "Please fill out all fields"})
+    else{
+        await User.findOneAndUpdate({userId: req.user.userId},{name, email,pfp}).then((user)=>{
+            res.send({success: true, msg: "Profile updated"})
         })
     }
 })

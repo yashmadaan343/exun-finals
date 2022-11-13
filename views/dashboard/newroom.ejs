@@ -427,7 +427,7 @@
             var res = await response.json();
             console.log(res);
             if (res.roomId) {
-                window.location.href = "/room/" + res.roomId;
+                window.location.href = "/room/join/" + res.roomId;
             }
         });
     };
