@@ -4,7 +4,7 @@ const Song = require('../schemas/songSchema')
 const {uuid} = require('uuidv4')
 
 router.get('/addSong', ensureAdminAuthenticated, (req, res) => {
-    res.render('admin/addSong')
+    res.render('admin/addSong', {user: req.user})
 })
 
 router.post('/addSong', ensureAdminAuthenticated, async (req, res) => {
