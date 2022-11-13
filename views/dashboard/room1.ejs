@@ -6,7 +6,7 @@
         <div class="music">
             <div class="playlist">
                 <% for (i in JSON.parse(songs)){ %>
-                <div class="upnext song" id="<%= JSON.parse(songs)[i]._id %>">
+                <div class="upnext song" id="<%= JSON.parse(songs)[i].name %>">
                     <img src="<%= JSON.parse(songs)[i].album_img %>" alt="" class="song-image">
                     <div class="details">
                         <div class="song-name">
@@ -240,6 +240,16 @@
         audio.addEventListener("ended", function () {
             nextSong();
         });
+
+        //give outline to current song
+        var song = document.getElementById(songs[currentSong].name);
+        song.style.outline = "2px solid var(--violet)";
+
+        //remove outline from previous song
+        if (currentSong > 0) {
+            var prevSong = document.getElementById(songs[currentSong - 1].name);
+            prevSong.style.outline = "none";
+        }
     }
 
     window.addEventListener("load", function () {
